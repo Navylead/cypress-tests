@@ -1,0 +1,42 @@
+name: CRITICAL
+on:
+  pull_request:
+  #push:
+  schedule:
+    - cron: '0 */1 * * *'   # ЗАПУСК КАЖДЫЙ ЧАС
+jobs:
+ WebSocket:
+   runs-on: ubuntu-latest    
+   steps:
+     - name: Checkout GitCode
+       uses: actions/checkout@v4
+       with:
+        ref: websocket_tests
+       
+     - name: Run Cypress Test
+       uses: cypress-io/github-action@v6
+       with:         
+         browser: chrome
+         #spec: "cypress/e2e/1_login.cy.js"
+
+     #- name: REPORT
+       #uses: actions/upload-artifact@v4
+       #if: failure()
+       #with:
+        #name: Report
+        #path: ~/cypress/reports
+          
+     - name: "Telegram notification on FAILURE"
+       if: failure()
+       uses: "appleboy/telegram-action@master"
+       with: 
+        to: secrets.TELEGRAM_CHAT_ID
+        token: secrets.TELEGRAM_TOKEN
+        message: |
+          <<<ОСНОВНОЙ ТЕСТ завершился неудачей!>>>
+          Запуск теста по ${{github.event_name}}
+        #photo: /home/runner/work/FLV/FLV/cypress/screenshots/**/*.png
+        video: /home/runner/work/FLV/FLV/cypress/video/*.mp4
+        document: /home/runner/work/FLV/FLV/cypress/reports/html/*.html
+        
+        

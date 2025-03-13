@@ -1,0 +1,21 @@
+{
+  "name": "fl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "delete:reports": "rm cypress/reports/* || true",
+    "one": "cypress run",
+    "test": "node_modules\\.bin\\cypress run",
+    "headless": "npm run test --headless"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cypress": "^13.17.0",
+    "cypress-mochawesome-reporter": "^3.8.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}

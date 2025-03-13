@@ -1,0 +1,71 @@
+name: COMMON
+on:
+  pull_request:
+  #push:
+  schedule:
+    - cron: '10 2 * * *'     # ЗАПУСК КАЖДЫЙ ДЕНЬ В 05:40 по МСК
+jobs:
+ UI_TESTS:
+          runs-on: ubuntu-latest    
+          steps:
+            - name: Checkout GitCode
+              uses: actions/checkout@v4
+              with:
+               ref: ui_tests
+              
+            - name: Run Cypress Test
+              uses: cypress-io/github-action@v6
+              with:         
+                browser: chrome
+                spec: "**/[1-6]_*.cy.js" # или так: spec: "cypress/e2e/{1_login,2_dashboard}.cy.js"
+       
+            #- name: REPORT
+              #uses: actions/upload-artifact@v4
+              #if: failure()
+              #with:
+               #name: Report
+               #path: ~/cypress/reports
+                 
+            - name: "Telegram notification on FAILURE"
+              if: failure()
+              uses: "appleboy/telegram-action@master"
+              with: 
+               to: secrets.TELEGRAM_CHAT_ID
+               token: secrets.TELEGRAM_TOKEN
+               message: |
+                 -<<<UI-ТЕСТЫ завершились неудачей!>>>-
+                 Запуск теста по ${{github.event_name}}
+               #photo: /home/runner/work/FLV/FLV/cypress/screenshots/**/*.png
+               video: /home/runner/work/FLV/FLV/cypress/video/*.mp4
+               document: /home/runner/work/FLV/FLV/cypress/reports/html/*.html
+               
+ PROFILE_TESTS:
+                if: ${{always()}}
+                needs: UI_TESTS
+                runs-on: ubuntu-latest    
+                steps:
+                  - name: Checkout GitCode
+                    uses: actions/checkout@v4
+                    with:
+                     ref: profile_tests
+                    
+                  - name: Run Cypress Test
+                    uses: cypress-io/github-action@v6
+                    with:         
+                      browser: chrome
+                      #spec: "cypress/e2e/1_login.cy.js"
+                       
+                  - name: "Telegram notification on FAILURE"
+                    if: failure()
+                    uses: "appleboy/telegram-action@master"
+                    with: 
+                     to: TELEGRAM_CHAT_ID
+                     token: TELEGRAM_TOKEN
+                     message: |
+                       -<<<ТЕСТЫ ЛК завершился неудачей!>>>-
+                       Запуск теста по ${{github.event_name}}
+                     #photo: /home/runner/work/FLV/FLV/cypress/screenshots/**/*.png
+                     video: /home/runner/work/FLV/FLV/cypress/video/*.mp4
+                     document: /home/runner/work/FLV/FLV/cypress/reports/html/*.html
+        
+        
