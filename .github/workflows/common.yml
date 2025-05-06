@@ -2,8 +2,8 @@ name: COMMON
 on:
   pull_request:
   #push:
-  schedule:
-    - cron: '10 2 * * *'     # ЗАПУСК КАЖДЫЙ ДЕНЬ В 05:40 по МСК
+  #schedule:
+  #  - cron: '10 2 * * *'     # ЗАПУСК КАЖДЫЙ ДЕНЬ В 05:40 по МСК
 jobs:
  UI_TESTS:
           runs-on: ubuntu-latest    
