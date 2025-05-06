@@ -2,8 +2,8 @@ name: CRITICAL
 on:
   pull_request:
   #push:
-  schedule:
-    - cron: '0 */1 * * *'   # ЗАПУСК КАЖДЫЙ ЧАС
+  #schedule:
+  #  - cron: '0 */1 * * *'   # ЗАПУСК КАЖДЫЙ ЧАС
 jobs:
  WebSocket:
    runs-on: ubuntu-latest    
